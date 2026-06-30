@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { Users, Ticket, FileText, GraduationCap } from 'lucide-react';
+import { Users, FileText, GraduationCap } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 
@@ -9,16 +9,14 @@ export default async function AdminDashboard() {
 
   if (role !== 'ADMIN') redirect('/');
 
-  const [usersCount, ticketsCount, docsCount, coursesCount] = await Promise.all([
+  const [usersCount, docsCount, coursesCount] = await Promise.all([
     prisma.user.count(),
-    prisma.ticket.count(),
     prisma.document.count(),
     prisma.course.count()
   ]);
 
   const metrics = [
     { name: 'Usuarios Activos', value: usersCount, icon: Users, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { name: 'Tickets Totales', value: ticketsCount, icon: Ticket, color: 'text-amber-600', bg: 'bg-amber-100' },
     { name: 'Documentos', value: docsCount, icon: FileText, color: 'text-emerald-600', bg: 'bg-emerald-100' },
     { name: 'Cursos Activos', value: coursesCount, icon: GraduationCap, color: 'text-purple-600', bg: 'bg-purple-100' },
   ];

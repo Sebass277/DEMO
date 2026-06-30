@@ -4,11 +4,11 @@ import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
-export async function toggleUserStatus(formData: FormData) {
+export async function toggleUserStatus(formData: FormData): Promise<void> {
   const cookieStore = await cookies();
   const role = cookieStore.get('auth_role')?.value;
   
-  if (role !== 'ADMIN') return { error: 'No autorizado' };
+  if (role !== 'ADMIN') return;
 
   const userId = parseInt(formData.get('userId') as string);
   const currentStatus = formData.get('currentStatus') === 'true';
@@ -19,5 +19,4 @@ export async function toggleUserStatus(formData: FormData) {
   });
 
   revalidatePath('/dashboard/admin/users');
-  return { success: true };
 }

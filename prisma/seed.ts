@@ -113,17 +113,6 @@ async function main() {
     }
   });
 
-  // Create Tickets
-  await prisma.ticket.create({
-    data: {
-      title: 'Problema con la impresora',
-      description: 'La impresora del piso 2 no tiene tinta.',
-      authorId: worker.id,
-      assignedToId: admin.id,
-      status: 'OPEN',
-    },
-  });
-
   // Create Documents
   await prisma.document.create({
     data: {

@@ -19,22 +19,17 @@ El portal cuenta con diferentes módulos integrados y adaptados para satisfacer 
    - Evaluaciones interactivas (exámenes) con autocalificación y registro de aprobados.
    - Seguimiento del progreso individual de cada empleado por parte de los supervisores (`LMS_MANAGER`).
 
-3. **🎫 Centro de Soporte (Tickets TI)**:
-   - Registro de incidencias técnicas (problemas de red, impresoras, hardware/software).
-   - Asignación de tickets a especialistas de soporte (`IT_MANAGER`).
-   - Comentarios internos y actualización de estados (`OPEN`, `IN_PROGRESS`, `RESOLVED`).
-
-4. **💼 Recursos Humanos**:
+3. **💼 Recursos Humanos**:
    - **Solicitudes de Empleado**: Petición y aprobación de vacaciones, licencias médicas y cambios de turnos.
    - **Boletas de Pago (Payslips)**: Subida, organización y consulta confidencial de recibos de sueldo mensuales.
    - Panel de aprobación dedicado para el rol de Recursos Humanos (`HR_MANAGER`).
 
-5. **💬 Chat y Mensajería Interna**:
+4. **💬 Chat y Mensajería Interna**:
    - Chat en tiempo real entre empleados de la clínica.
    - Envío de archivos y documentos adjuntos dentro de la mensajería.
    - Notificación visual de mensajes no leídos.
 
-6. **📁 Directorio de Contactos**:
+5. **📁 Directorio de Contactos**:
    - Directorio institucional para buscar perfiles de otros médicos, enfermeros y personal administrativo por departamento.
 
 ---
@@ -61,7 +56,7 @@ La base de datos contiene usuarios precargados para evaluar las funcionalidades 
 | **Admin Sistema** | `admin@empresa.com` | `ADMIN` | Gerencia | Control global, creación de contenido y administración general. |
 | **Juan Perez** | `juan@empresa.com` | `WORKER` | Ventas / Staff | Vista estándar del empleado: realiza solicitudes, ve sus boletas y cursos. |
 | **Maria RRHH** | `hr@empresa.com` | `HR_MANAGER` | Recursos Humanos | Autoriza solicitudes de vacaciones, gestiona y carga boletas de pago. |
-| **Carlos Sistemas** | `it@empresa.com` | `IT_MANAGER` | IT / Sistemas | Atiende, asigna y resuelve los tickets de soporte de la clínica. |
+| **Carlos Sistemas** | `it@empresa.com` | `IT_MANAGER` | IT / Sistemas | Encargado del departamento de TI, con vista de portal corporativo estándar. |
 | **Laura Capacitación** | `lms@empresa.com` | `LMS_MANAGER` | Capacitación | Crea cursos, módulos de estudio, exámenes y monitorea el progreso formativo. |
 
 ---
@@ -131,7 +126,7 @@ A continuación se detalla la organización de los directorios clave en `src/`:
 
 ```text
 src/
-├── actions/        # Server Actions para mutaciones de datos estructurados (auth, tickets, courses)
+├── actions/        # Server Actions para mutaciones de datos estructurados (auth, lms, requests, admin)
 ├── app/            # Next.js App Router (Rutas, Layouts y Páginas)
 │   ├── dashboard/  # Dashboard de la intranet protegido con subcarpetas para cada módulo
 │   ├── login/      # Página de inicio de sesión y autenticación

@@ -21,8 +21,6 @@ model User {
   department       String?
   isActive         Boolean    @default(true)
   posts            Post[]
-  assignedTickets  Ticket[]   @relation("AssignedTickets")
-  createdTickets   Ticket[]   @relation("CreatedTickets")
   documents        Document[]
   payslips         Payslip[]
   courseEnrollments CourseEnrollment[]
@@ -31,7 +29,6 @@ model User {
   employeeRequests EmployeeRequest[]
   examAttempts     ExamAttempt[]
   targetedPosts    Post[]     @relation("TargetedPosts")
-  ticketComments   TicketComment[]
   postReactions    PostReaction[]
   pollVotes        PollVote[]
 }
@@ -105,30 +102,6 @@ model Message {
   receiverId Int
   receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
   createdAt  DateTime @default(now())
-}
-
-model Ticket {
-  id           Int      @id @default(autoincrement())
-  title        String
-  description  String
-  status       String   @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED
-  authorId     Int
-  author       User     @relation("CreatedTickets", fields: [authorId], references: [id])
-  assignedToId Int?
-  assignedTo   User?    @relation("AssignedTickets", fields: [assignedToId], references: [id])
-  comments     TicketComment[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt @default(now())
-}
-
-model TicketComment {
-  id        Int      @id @default(autoincrement())
-  content   String
-  ticketId  Int
-  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
-  createdAt DateTime @default(now())
 }
 
 model Document {

@@ -65,11 +65,6 @@ export default async function Dashboard() {
                 </a>
               </li>
               <li>
-                <a href="/tickets" className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                  → Crear solicitud de soporte
-                </a>
-              </li>
-              <li>
                 <a href="/documents" className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
                   → Políticas de la empresa
                 </a>

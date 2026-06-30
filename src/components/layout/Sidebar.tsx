@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { 
   LayoutDashboard, 
   Users, 
-  Ticket, 
   FileText, 
   LogOut,
   GraduationCap,
@@ -43,17 +42,13 @@ export function Sidebar({ role, email }: SidebarProps) {
     if (role === 'WORKER') {
       baseNav.push({ name: 'Plataforma de Capacitación', href: '/dashboard/lms', icon: GraduationCap });
       baseNav.push({ name: 'Mis Boletas', href: '/dashboard/payslips', icon: Banknote });
-      baseNav.push({ name: 'Tickets IT', href: '/dashboard/tickets', icon: Ticket });
       baseNav.push({ name: 'Mis Permisos', href: '/dashboard/worker/requests', icon: FileText });
     } else if (role === 'ADMIN') {
       baseNav.push({ name: 'Panel Admin', href: '/dashboard/admin', icon: LineChart });
       baseNav.push({ name: 'Empleados', href: '/dashboard/admin/users', icon: Users });
-      baseNav.push({ name: 'Tickets Generales', href: '/dashboard/tickets', icon: Ticket });
     } else if (role === 'HR_MANAGER') {
       baseNav.push({ name: 'Gestor de Boletas', href: '/dashboard/hr/payslips', icon: Banknote });
       baseNav.push({ name: 'Bandeja Permisos', href: '/dashboard/hr/requests', icon: FileText });
-    } else if (role === 'IT_MANAGER') {
-      baseNav.push({ name: 'Bandeja Tickets', href: '/dashboard/tickets', icon: Ticket });
     } else if (role === 'LMS_MANAGER') {
       baseNav.push({ name: 'Plataforma de Capacitación', href: '/dashboard/lms/manager', icon: GraduationCap });
     }
