@@ -1,0 +1,241 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id               Int        @id @default(autoincrement())
+  email            String     @unique
+  password         String     @default("")
+  name             String
+  avatarUrl        String?
+  role             String     @default("WORKER") // ADMIN, WORKER, HR_MANAGER, IT_MANAGER, LMS_MANAGER
+  department       String?
+  isActive         Boolean    @default(true)
+  posts            Post[]
+  assignedTickets  Ticket[]   @relation("AssignedTickets")
+  createdTickets   Ticket[]   @relation("CreatedTickets")
+  documents        Document[]
+  payslips         Payslip[]
+  courseEnrollments CourseEnrollment[]
+  messagesSent     Message[]  @relation("SentMessages")
+  messagesReceived Message[]  @relation("ReceivedMessages")
+  employeeRequests EmployeeRequest[]
+  examAttempts     ExamAttempt[]
+  targetedPosts    Post[]     @relation("TargetedPosts")
+  ticketComments   TicketComment[]
+  postReactions    PostReaction[]
+  pollVotes        PollVote[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  isPublic  Boolean  @default(false)
+  authorId     Int
+  author       User     @relation(fields: [authorId], references: [id])
+  targetUserId Int?
+  targetUser   User?    @relation("TargetedPosts", fields: [targetUserId], references: [id])
+  imageUrl     String?
+  linkUrl      String?
+  allowReactions Boolean @default(true)
+  reactions    PostReaction[]
+  poll         Poll?
+  createdAt    DateTime @default(now())
+}
+
+model PostReaction {
+  id        Int      @id @default(autoincrement())
+  type      String   
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+}
+
+model Poll {
+  id        Int      @id @default(autoincrement())
+  question  String
+  postId    Int      @unique
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  options   PollOption[]
+  votes     PollVote[]
+}
+
+model PollOption {
+  id        Int      @id @default(autoincrement())
+  text      String
+  pollId    Int
+  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes     PollVote[]
+}
+
+model PollVote {
+  id           Int        @id @default(autoincrement())
+  pollId       Int
+  poll         Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  pollOptionId Int
+  pollOption   PollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([pollId, userId])
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  content    String
+  fileUrl    String?
+  isRead     Boolean  @default(false)
+  senderId   Int
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId Int
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Ticket {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String
+  status       String   @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED
+  authorId     Int
+  author       User     @relation("CreatedTickets", fields: [authorId], references: [id])
+  assignedToId Int?
+  assignedTo   User?    @relation("AssignedTickets", fields: [assignedToId], references: [id])
+  comments     TicketComment[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt @default(now())
+}
+
+model TicketComment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  ticketId  Int
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Document {
+  id         Int      @id @default(autoincrement())
+  title      String
+  url        String
+  category   String   @default("GENERAL")
+  uploadedBy Int
+  author     User     @relation(fields: [uploadedBy], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Course {
+  id          Int                @id @default(autoincrement())
+  title       String
+  description String
+  coverUrl    String?
+  modules     CourseModule[]
+  exams       Exam[]
+  enrollments CourseEnrollment[]
+  createdAt   DateTime           @default(now())
+}
+
+model CourseModule {
+  id        Int        @id @default(autoincrement())
+  title     String
+  order     Int        @default(1)
+  courseId  Int
+  course    Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  materials Material[]
+}
+
+model Material {
+  id          Int          @id @default(autoincrement())
+  title       String
+  url         String       // Link to PDF or Video
+  type        String       @default("VIDEO") // VIDEO, PDF, LINK
+  moduleId    Int
+  module      CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+}
+
+model Exam {
+  id        Int        @id @default(autoincrement())
+  title     String
+  courseId  Int
+  course    Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions Question[]
+  attempts  ExamAttempt[]
+}
+
+model Question {
+  id        Int              @id @default(autoincrement())
+  text      String
+  examId    Int
+  exam      Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  options   QuestionOption[]
+}
+
+model QuestionOption {
+  id         Int      @id @default(autoincrement())
+  text       String
+  isCorrect  Boolean  @default(false)
+  questionId Int
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model CourseEnrollment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress  Int      @default(0) // Percentage 0-100
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ExamAttempt {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  examId    Int
+  exam      Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  score     Float    // Score achieved
+  passed    Boolean
+  createdAt DateTime @default(now())
+}
+
+model Payslip {
+  id        Int      @id @default(autoincrement())
+  title     String
+  month     Int
+  year      Int
+  url       String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model EmployeeRequest {
+  id          Int      @id @default(autoincrement())
+  type        String   // VACATION, SICK_LEAVE, SCHEDULE_SWAP
+  description String
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  authorId    Int
+  author      User     @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
+}

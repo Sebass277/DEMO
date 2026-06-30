@@ -1,0 +1,16 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="32" y="32" width="448" height="448" rx="120" fill="#D9F971" />
+  
+  <!-- Asterisk -->
+  <g stroke="#0f172a" stroke-width="80" stroke-linecap="butt">
+    <!-- Vertical -->
+    <line x1="256" y1="120" x2="256" y2="392" />
+    <!-- Horizontal -->
+    <line x1="120" y1="256" x2="392" y2="256" />
+    <!-- Diagonal (top-left to bottom-right) -->
+    <line x1="160" y1="160" x2="352" y2="352" />
+    <!-- Diagonal (bottom-left to top-right) -->
+    <line x1="160" y1="352" x2="352" y2="160" />
+  </g>
+</svg>
